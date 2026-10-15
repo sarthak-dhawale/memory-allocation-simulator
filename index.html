@@ -1,674 +1,1317 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Memory Allocation Simulator</title>
-
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <!-- APPLICATION HEADER -->
-
-    <header class="app-header">
-
-        <div class="brand">
-            <div class="brand-mark">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/>
-                    <rect x="7" y="7" width="4" height="4" fill="currentColor"/>
-                    <rect x="13" y="7" width="4" height="4" fill="currentColor" opacity="0.35"/>
-                    <rect x="7" y="13" width="4" height="4" fill="currentColor" opacity="0.35"/>
-                    <rect x="13" y="13" width="4" height="4" fill="currentColor"/>
-                </svg>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2563eb" />
+    <title>Interactive Memory Allocation Simulator</title>
+    <link rel="stylesheet" href="css/style.css?v=25" />
+  </head>
+  <body>
+    <svg
+      class="icon-sprite"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <symbol id="icon-grid" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </symbol>
+        <symbol id="icon-chip" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="3" />
+          <path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" />
+          <rect x="9" y="9" width="6" height="6" rx="1" />
+        </symbol>
+        <symbol id="icon-layers" viewBox="0 0 24 24">
+          <path d="m12 3 10 5-10 5L2 8l10-5Zm-9 9 9 5 9-5M3 16l9 5 9-5" />
+        </symbol>
+        <symbol id="icon-compare" viewBox="0 0 24 24">
+          <path d="M5 4v16M12 9v11M19 2v18M2 20h20" />
+        </symbol>
+        <symbol id="icon-chart" viewBox="0 0 24 24">
+          <path d="M3 3v18h18M6 15l5-5 4 3 6-8" />
+        </symbol>
+        <symbol id="icon-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </symbol>
+        <symbol id="icon-book" viewBox="0 0 24 24">
+          <path
+            d="M12 5v16M12 5C8 2 5 3 2 4v15c3-1 6-2 10 2 4-4 7-3 10-2V4c-3-1-6-2-10 1Z"
+          />
+        </symbol>
+        <symbol id="icon-arrow" viewBox="0 0 24 24">
+          <path d="M4 12h15m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="icon-play" viewBox="0 0 24 24">
+          <path d="m7 4 13 8-13 8V4Z" />
+        </symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24">
+          <path d="M20 14A9 9 0 0 1 10 4a9 9 0 1 0 10 10Z" />
+        </symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path
+            d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
+          />
+        </symbol>
+        <symbol id="icon-reset" viewBox="0 0 24 24">
+          <path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" />
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="m8 12 3 3 5-6" />
+        </symbol>
+        <symbol id="icon-spark" viewBox="0 0 24 24">
+          <path
+            d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"
+          />
+        </symbol>
+      </defs>
+    </svg>
+    <a class="skip-link" href="#mainContent">Skip to content</a>
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#overview" data-navigate="overview"
+        ><span class="brand-mark"
+          ><svg class="icon" aria-hidden="true">
+            <use href="#icon-chip"></use></svg
+        ></span>
+        <div>
+          <strong>Interactive Memory<br />Allocation Simulator</strong
+          ><span>Memory, made clear.</span>
+        </div></a
+      >
+      <div class="sidebar-content">
+        <p class="nav-heading">YOUR WORKSPACE</p>
+        <nav aria-label="Workspace">
+          <a
+            href="#overview"
+            class="nav-link active"
+            data-navigate="overview"
+            aria-current="page"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-grid"></use></svg
+            ><span>Overview</span></a
+          ><a href="#simulator" class="nav-link" data-navigate="simulator"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-chip"></use></svg
+            ><span>Simulation studio</span></a
+          ><a href="#processes" class="nav-link" data-navigate="processes"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-layers"></use></svg
+            ><span>Processes</span></a
+          ><a href="#comparison" class="nav-link" data-navigate="comparison"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-compare"></use></svg
+            ><span>Compare algorithms</span></a
+          ><a href="#analytics" class="nav-link" data-navigate="analytics"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-chart"></use></svg
+            ><span>Memory insights</span></a
+          ><a href="#activity" class="nav-link" data-navigate="activity"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-clock"></use></svg
+            ><span>Activity log</span></a
+          >
+        </nav>
+      </div>
+    </aside>
+    <button
+      class="sidebar-backdrop"
+      id="sidebarBackdrop"
+      aria-label="Close navigation"
+      hidden
+    ></button>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button
+            id="menuButton"
+            class="icon-button menu-button"
+            aria-label="Open navigation"
+            aria-expanded="false"
+            aria-controls="sidebar"
+          >
+            <svg class="icon" aria-hidden="true">
+              <use href="#icon-menu"></use>
+            </svg>
+          </button>
+          <div class="breadcrumbs">
+            <span>Home</span><span class="breadcrumb-slash">/</span
+            ><span id="breadcrumbLabel">Overview</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button
+            id="themeButton"
+            class="icon-button"
+            aria-label="Switch to dark theme"
+            title="Switch theme"
+          >
+            <svg class="icon" aria-hidden="true">
+              <use href="#icon-moon"></use>
+            </svg></button
+          ><span class="topbar-separator"></span
+          ><button
+            id="resetButton"
+            aria-label="Reset Simulation"
+            class="button button-secondary button-small"
+          >
+            <svg class="icon" aria-hidden="true">
+              <use href="#icon-reset"></use></svg
+            ><span>Reset Simulation</span>
+          </button>
+        </div>
+      </header>
+      <main id="mainContent" class="app-container" tabindex="-1">
+        <section class="connection-banner">
+          <span class="connection-icon"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-chip"></use></svg></span
+          ><strong id="workspaceStatus">Simulation ready</strong
+          ><span class="connection-description" id="workspaceStatusDescription"
+            >Your memory workspace is ready to explore.</span
+          ><span class="connection-state"
+            ><span class="status-dot"></span
+            ><span id="workspaceStep">Step 1</span></span
+          >
+        </section>
+        <div class="page-heading">
+          <div>
+            <h1 id="pageTitle">Memory overview</h1>
+            <p id="pageSubtitle">
+              Live memory state, allocation results, and available capacity.
+            </p>
+          </div>
+          <span class="workspace-badge"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#icon-check"></use>
+            </svg>
+            Local workspace</span
+          >
+        </div>
+        <section class="page" data-page="overview" id="overviewPage">
+          <section class="overview-intro" aria-labelledby="introTitle">
+            <div class="intro-copy">
+              <span class="intro-kicker"
+                >OPERATING SYSTEMS · IN A FEW SECONDS</span
+              >
+              <h2 id="introTitle">How does a process find room in memory?</h2>
+              <p>
+                Explore how an OS allocates memory, why gaps and waste appear,
+                and how different strategies change the result.
+              </p>
+              <a class="text-link" href="#simulator" data-navigate="simulator"
+                >Try your own workload
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-arrow"></use></svg
+              ></a>
             </div>
+            <div class="intro-example">
+              <div class="intro-example-heading">
+                <span>Try a <strong>200 MB</strong> request</span
+                ><span class="intro-example-tag">Mini example</span>
+              </div>
+              <div
+                class="intro-strategies"
+                role="group"
+                aria-label="Mini example allocation strategy"
+              >
+                <button
+                  type="button"
+                  data-intro-algorithm="first-fit"
+                  aria-pressed="true"
+                >
+                  First Fit</button
+                ><button
+                  type="button"
+                  data-intro-algorithm="best-fit"
+                  aria-pressed="false"
+                >
+                  Best Fit</button
+                ><button
+                  type="button"
+                  data-intro-algorithm="worst-fit"
+                  aria-pressed="false"
+                >
+                  Worst Fit</button
+                ><button
+                  type="button"
+                  data-intro-algorithm="next-fit"
+                  aria-pressed="false"
+                >
+                  Next Fit
+                </button>
+              </div>
+              <div
+                id="introMemory"
+                class="intro-memory"
+                aria-label="Three separate free memory holes"
+              ></div>
+              <p
+                id="introResult"
+                class="intro-result"
+                role="status"
+                aria-live="polite"
+              ></p>
+              <div class="intro-legend">
+                <span><i class="intro-used-dot"></i>New process</span
+                ><span><i></i>Free space</span><span>Independent example</span>
+              </div>
+            </div>
+          </section>
 
+          <div class="overview-toolbar">
             <div>
-                <h1>Memory Allocation Simulator</h1>
-                <p>os.memory — contiguous partition allocation</p>
+              <span class="subtle-tag" id="overviewMode"
+                >Variable partitions</span
+              ><span class="overview-context" id="overviewMemoryStatus"
+                >Ready for your workload</span
+              >
             </div>
-        </div>
+            <div class="overview-actions">
+              <a
+                class="button button-secondary button-small"
+                href="#comparison"
+                data-navigate="comparison"
+                >Compare algorithms</a
+              ><a
+                class="button button-primary button-small"
+                href="#simulator"
+                data-navigate="simulator"
+                >Open simulation studio
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-arrow"></use></svg
+              ></a>
+            </div>
+          </div>
+          <section class="dashboard-grid">
+            <div class="stat-card">
+              <span class="stat-label">Total Memory</span>
+              <strong id="totalMemory">0 MB</strong>
+            </div>
 
-        <div class="header-actions">
-            <span class="status-indicator">
-                <span class="status-dot"></span>
-                simulation running
-            </span>
+            <div class="stat-card">
+              <span class="stat-label">Allocated Memory</span>
+              <strong id="allocatedMemory">0 MB</strong>
+            </div>
 
-            <button
-                id="resetButton"
-                class="button button-danger"
-            >
-                Reset Simulation
-            </button>
-        </div>
+            <div class="stat-card">
+              <span class="stat-label">Free Memory</span>
+              <strong id="freeMemory">0 MB</strong>
+            </div>
 
-    </header>
+            <div class="stat-card">
+              <span class="stat-label">Utilization</span>
+              <strong id="utilization">0%</strong>
+            </div>
 
-    <!-- MAIN APPLICATION -->
+            <div class="stat-card">
+              <span class="stat-label">Total Processes</span>
+              <strong id="processCount">0</strong>
+            </div>
 
-    <main class="app-container">
+            <div class="stat-card">
+              <span class="stat-label">Free Partitions</span>
+              <strong id="freeBlockCount">0</strong>
+            </div>
+          </section>
 
-        <!-- CONTROL BAR -->
+          <details class="metrics-help">
+            <summary>What do these numbers mean?</summary>
+            <div id="overviewMetricHelp" class="metric-explanations"></div>
+          </details>
+          <div class="overview-grid">
+            <section class="panel overview-health">
+              <div class="panel-header">
+                <div class="title-with-icon">
+                  <span class="icon-tile"
+                    ><svg class="icon" aria-hidden="true">
+                      <use href="#icon-layers"></use></svg
+                  ></span>
+                  <div>
+                    <h2>Memory layout</h2>
+                    <p>
+                      Physical address space · segments are proportional to
+                      size.
+                    </p>
+                  </div>
+                </div>
+                <span class="subtle-tag" id="overviewAlgorithm">First Fit</span>
+              </div>
+              <div class="health-content">
+                <div class="overview-map-caption">
+                  <span>ADDRESS SPACE</span
+                  ><span id="overviewAddressEnd">0 MB</span>
+                </div>
+                <div
+                  class="capacity-track"
+                  id="overviewCapacity"
+                  aria-label="Current memory distribution"
+                ></div>
+                <div id="overviewPointer" class="pointer-slot"></div>
+                <div class="capacity-legend">
+                  <span
+                    ><i class="legend-dot used"></i>Allocated
+                    <strong id="overviewAllocated">0 MB</strong></span
+                  ><span
+                    ><i class="legend-dot"></i>Free
+                    <strong id="overviewFree">0 MB</strong></span
+                  >
+                </div>
+                <div
+                  class="overview-regions"
+                  id="overviewRegions"
+                  aria-label="Memory regions"
+                ></div>
+                <div class="overview-facts">
+                  <div>
+                    <span>Processes in memory</span
+                    ><strong id="overviewProcessCount">0</strong>
+                  </div>
+                  <div>
+                    <span>Largest free block</span
+                    ><strong id="overviewLargest">0 MB</strong>
+                  </div>
+                  <div>
+                    <span>External fragmentation</span
+                    ><strong id="overviewExternal">0 MB</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-footer">
+                <span id="overviewNextHint"
+                  >Create a process to begin your first allocation.</span
+                ><a href="#simulator" data-navigate="simulator"
+                  >Open studio
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#icon-arrow"></use></svg
+                ></a>
+              </div>
+            </section>
+            <section class="panel quick-guide">
+              <div class="panel-header">
+                <div>
+                  <h2>Explore the simulation</h2>
+                  <p>Choose what you want to inspect.</p>
+                </div>
+                <svg class="icon" aria-hidden="true">
+                  <use href="#icon-spark"></use>
+                </svg>
+              </div>
+              <div class="guide-steps">
+                <a href="#simulator" data-navigate="simulator"
+                  ><span class="guide-number">01</span>
+                  <div>
+                    <strong>Allocate a process</strong
+                    ><span>Create requests and watch each placement.</span>
+                  </div>
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#icon-arrow"></use></svg
+                ></a>
+                <a href="#analytics" data-navigate="analytics"
+                  ><span class="guide-number">02</span>
+                  <div>
+                    <strong>Inspect fragmentation</strong
+                    ><span>Track free holes and memory waste.</span>
+                  </div>
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#icon-arrow"></use></svg
+                ></a>
+                <a href="#comparison" data-navigate="comparison"
+                  ><span class="guide-number">03</span>
+                  <div>
+                    <strong>Compare strategies</strong
+                    ><span>First Fit, Best Fit, Worst Fit, and Next Fit.</span>
+                  </div>
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#icon-arrow"></use></svg
+                ></a>
+              </div>
+            </section>
+          </div>
+          <section
+            class="panel project-team"
+            aria-labelledby="projectTeamTitle"
+          >
+            <div class="panel-header">
+              <div>
+                <h2 id="projectTeamTitle">Project team</h2>
+                <p>
+                  Interactive Memory Allocation Simulator · Operating Systems
+                  Project
+                </p>
+              </div>
+            </div>
+            <ul class="team-members">
+              <li>
+                <span class="team-avatar" aria-hidden="true">UV</span
+                ><strong>Umang Vekariya</strong>
+              </li>
+              <li>
+                <span class="team-avatar" aria-hidden="true">SD</span
+                ><strong>Sarthak Dhawale</strong>
+              </li>
+              <li>
+                <span class="team-avatar" aria-hidden="true">AK</span
+                ><strong>Aditya Khunt</strong>
+              </li>
+            </ul>
+          </section>
+        </section>
+        <section class="page" data-page="simulator" id="simulatorPage" hidden>
+          <section class="guided-demo">
+            <div>
+              <div class="guide-title-row">
+                <h2 id="guidedTitle">Guided fragmentation demo</h2>
+                <span id="guidedProgress"></span>
+              </div>
+              <p id="guidedExplanation">
+                Follow allocation, release, failure, compaction, and a
+                successful retry.
+              </p>
+            </div>
+            <div class="guide-actions">
+              <button
+                id="startGuidedButton"
+                class="button button-secondary button-small"
+              >
+                Start guided demo</button
+              ><button
+                id="guidedNextButton"
+                class="button button-primary button-small"
+                hidden
+              >
+                Next stage
+              </button>
+            </div>
+          </section>
+          <div class="session-toolbar">
+            <span id="sessionStatus">Autosave is local to this browser.</span>
+            <div>
+              <button
+                id="saveWorkloadButton"
+                class="button button-secondary button-small"
+              >
+                Save workload</button
+              ><button
+                id="loadWorkloadButton"
+                class="button button-secondary button-small"
+              >
+                Load workload</button
+              ><button
+                id="exportReportButton"
+                class="button button-secondary button-small"
+              >
+                Export report</button
+              ><input
+                id="workloadFile"
+                type="file"
+                accept=".json,application/json"
+                hidden
+              />
+            </div>
+          </div>
+          <section class="control-bar">
+            <div class="control-group">
+              <label for="algorithmSelect"> Allocation Algorithm </label>
 
-        <section class="control-bar">
-
-        <div class="control-group">
-
-            <label for="algorithmSelect">
-                Allocation Algorithm
-            </label>
-
-            <select id="algorithmSelect">
+              <select id="algorithmSelect">
                 <option value="first-fit">First Fit</option>
                 <option value="best-fit">Best Fit</option>
                 <option value="worst-fit">Worst Fit</option>
-            </select>
+                <option value="next-fit">Next Fit</option>
+              </select>
+            </div>
 
-        </div>
+            <div class="control-group">
+              <label for="allocationMode">Allocation Mode</label>
+              <select id="allocationMode">
+                <option value="variable">Variable Partitioning</option>
+                <option value="fixed">Fixed Partitioning</option>
+              </select>
+            </div>
+            <div class="control-group memory-config-group">
+              <label for="memoryBlocks"> Memory Blocks (MB) </label>
 
-        <div class="control-group memory-config-group">
-
-            <label for="memoryBlocks">
-                Memory Blocks (MB)
-            </label>
-
-            <input
+              <input
                 type="text"
                 id="memoryBlocks"
                 placeholder="500, 800, 300, 1200"
                 value="500, 800, 300, 1200"
-            >
+              />
+            </div>
 
-        </div>
+            <div class="control-group">
+              <label> Actions </label>
 
-        <div class="control-group">
-
-            <label>
-                Actions
-            </label>
-
-            <div class="control-actions">
-
+              <div class="control-actions">
                 <button
-                    id="configureMemoryButton"
-                    class="button button-primary"
+                  id="configureMemoryButton"
+                  class="button button-primary"
                 >
-                    Configure Memory
+                  Configure Memory
                 </button>
 
-                <button
-                    id="loadSampleButton"
-                    class="button button-secondary"
-                >
-                    Load Sample
+                <button id="loadSampleButton" class="button button-secondary">
+                  Load Sample
                 </button>
-
+              </div>
             </div>
+          </section>
 
-        </div>
-
-    </section>
-
-        <!-- DASHBOARD -->
-
-        <section class="dashboard-grid">
-
-            <div class="stat-card">
-                <span class="stat-label">Total Memory</span>
-                <strong id="totalMemory">0 MB</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Allocated Memory</span>
-                <strong id="allocatedMemory">0 MB</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Free Memory</span>
-                <strong id="freeMemory">0 MB</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Utilization</span>
-                <strong id="utilization">0%</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Processes</span>
-                <strong id="processCount">0</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Free Partitions</span>
-                <strong id="freeBlockCount">0</strong>
-            </div>
-
-        </section>
-
-        <!-- MAIN GRID -->
-
-        <section class="main-grid">
-
+          <p id="modeDescription" class="mode-description"></p>
+          <section class="main-grid">
             <!-- PROCESS MANAGEMENT -->
 
             <div class="panel process-panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Create a process</h2>
+                  <p>Add a request to the allocation queue.</p>
+                </div>
+              </div>
 
-                <div class="panel-header">
+              <form id="processForm">
+                <div class="form-row">
+                  <div class="form-field">
+                    <label for="processId"> Process ID </label>
 
-                    <div>
-                        <h2>Process Management</h2>
-                        <p>Create and allocate simulated processes.</p>
-                    </div>
+                    <input
+                      type="text"
+                      id="processId"
+                      placeholder="P1"
+                      maxlength="10"
+                      required
+                    />
+                  </div>
 
+                  <div class="form-field">
+                    <label for="processName"> Process Name </label>
+
+                    <input
+                      type="text"
+                      id="processName"
+                      placeholder="Chrome"
+                      maxlength="30"
+                      required
+                    />
+                  </div>
                 </div>
 
-                <form id="processForm">
+                <div class="form-field">
+                  <label for="memoryRequest"> Memory Requirement (MB) </label>
 
-                    <div class="form-row">
+                  <input
+                    type="number"
+                    id="memoryRequest"
+                    placeholder="500"
+                    min="1"
+                    step="1"
+                    required
+                  />
+                </div>
 
-                        <div class="form-field">
+                <button type="submit" class="button button-primary button-full">
+                  Create Process
+                </button>
+              </form>
 
-                            <label for="processId">
-                                Process ID
-                            </label>
+              <div class="divider"></div>
 
-                            <input
-                                type="text"
-                                id="processId"
-                                placeholder="P1"
-                                maxlength="10"
-                                required
-                            >
+              <div class="section-subtitle">Quick Allocation</div>
 
-                        </div>
+              <div class="step-mode">
+                <div class="step-mode-header">
+                  <div>
+                    <span class="step-mode-title"> Step-by-Step Mode </span>
 
-                        <div class="form-field">
+                    <span class="step-mode-description">
+                      Inspect blocks one at a time. Previous reviews
+                      explanations; committed allocations stay in memory.
+                    </span>
+                  </div>
 
-                            <label for="processName">
-                                Process Name
-                            </label>
+                  <label class="toggle">
+                    <input
+                      type="checkbox"
+                      id="stepModeToggle"
+                      aria-label="Enable step-by-step allocation"
+                    />
 
-                            <input
-                                type="text"
-                                id="processName"
-                                placeholder="Chrome"
-                                maxlength="30"
-                                required
-                            >
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
 
-                        </div>
+                <div id="stepControls" class="step-controls hidden">
+                  <div class="step-progress">
+                    <span id="stepProgress"> Step 0 / 0 </span>
+                  </div>
 
-                    </div>
-
-                    <div class="form-field">
-
-                        <label for="memoryRequest">
-                            Memory Requirement (MB)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="memoryRequest"
-                            placeholder="500"
-                            min="1"
-                            step="1"
-                            required
-                        >
-
-                    </div>
-
+                  <div class="playback-controls">
                     <button
-                        type="submit"
-                        class="button button-primary button-full"
+                      id="playStepsButton"
+                      class="button button-primary button-small"
+                      aria-pressed="false"
+                      disabled
                     >
-                        Create Process
-                    </button>
-
-                </form>
-
-                <div class="divider"></div>
-
-                <div class="section-subtitle">
-                    Quick Allocation
-                </div>
-
-                <div class="step-mode">
-
-                    <div class="step-mode-header">
-
-                        <div>
-                            <span class="step-mode-title">
-                                Step-by-Step Mode
-                            </span>
-
-                            <span class="step-mode-description">
-                                Walk through the allocation decision one step at a time.
-                            </span>
-                        </div>
-
-                        <label class="toggle">
-
-                            <input
-                                type="checkbox"
-                                id="stepModeToggle"
-                            >
-
-                            <span class="toggle-slider"></span>
-
-                        </label>
-
-                    </div>
-
-                    <div
-                        id="stepControls"
-                        class="step-controls hidden"
-                    >
-
-                        <div class="step-progress">
-
-                            <span id="stepProgress">
-                                Step 0 / 0
-                            </span>
-
-                        </div>
-
-                        <div class="step-buttons">
-
-                            <button
-                                id="previousStepButton"
-                                class="button button-secondary button-small"
-                                disabled
-                            >
-                                Previous
-                            </button>
-
-                            <button
-                                id="nextStepButton"
-                                class="button button-primary button-small"
-                                disabled
-                            >
-                                Next
-                            </button>
-
-                            <button
-                                id="runAllButton"
-                                class="button button-secondary button-small"
-                                disabled
-                            >
-                                Run All
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="allocation-controls">
-
-                    <select id="allocationProcessSelect">
-                        <option value="">
-                            Select process
-                        </option>
+                      Play</button
+                    ><label for="playbackSpeed">Speed</label
+                    ><select id="playbackSpeed">
+                      <option value="1600">Slow</option>
+                      <option value="1000" selected>Normal</option>
+                      <option value="500">Fast</option>
                     </select>
-
+                  </div>
+                  <div class="step-buttons">
                     <button
-                        id="allocateButton"
-                        class="button button-primary"
+                      id="previousStepButton"
+                      class="button button-secondary button-small"
+                      disabled
                     >
-                        Allocate
+                      Previous
                     </button>
 
-                </div>
+                    <button
+                      id="nextStepButton"
+                      class="button button-primary button-small"
+                      disabled
+                    >
+                      Next
+                    </button>
 
+                    <button
+                      id="runAllButton"
+                      class="button button-secondary button-small"
+                      disabled
+                    >
+                      Run All
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="waiting-queue-section">
+                <div class="queue-heading">
+                  <span>Waiting queue</span
+                  ><span id="waitingCount">0 waiting</span>
+                </div>
+                <div id="waitingQueue" class="waiting-queue"></div>
+              </div>
+              <div class="allocation-controls">
+                <select
+                  id="allocationProcessSelect"
+                  aria-label="Waiting process to allocate"
+                >
+                  <option value="">Select process</option>
+                </select>
+
+                <button id="allocateButton" class="button button-primary">
+                  Allocate
+                </button>
+              </div>
             </div>
 
             <!-- MEMORY MAP -->
 
             <div class="panel memory-panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>Memory Map</h2>
-                        <p>
-                            Current simulated memory layout.
-                        </p>
-                    </div>
-
-                    <div class="memory-total-label">
-                        <span id="memoryMapTotal">0 MB</span>
-                    </div>
-
+              <div class="panel-header">
+                <div>
+                  <h2>Memory layout</h2>
+                  <p>Contiguous address space · sizes in MB</p>
                 </div>
 
-                <div
-                    id="memoryMap"
-                    class="memory-map"
-                >
-
-                    <div class="empty-state">
-                        <strong>No memory configured</strong>
-                        <span>
-                            Load sample data to begin the simulation.
-                        </span>
-                    </div>
-
+                <div class="memory-total-label">
+                  <span id="memoryMapTotal">0 MB</span>
+                  <button
+                    id="compactButton"
+                    class="button button-primary button-small"
+                  >
+                    Compact Memory
+                  </button>
                 </div>
+              </div>
 
+              <div class="studio-metrics">
+                <div>
+                  <span>Reserved</span
+                  ><strong id="studioAllocated">0 MB</strong>
+                </div>
+                <div>
+                  <span>Available</span><strong id="studioFree">0 MB</strong>
+                </div>
+                <div>
+                  <span>Largest hole</span
+                  ><strong id="studioLargest">0 MB</strong>
+                </div>
+                <div>
+                  <span>Utilization</span
+                  ><strong id="studioUtilization">0%</strong>
+                </div>
+              </div>
+              <div class="payload-breakdown">
+                <span id="studioPayload">0% useful utilization</span
+                ><span id="studioWaste">0 MB internal waste</span>
+              </div>
+              <details class="metrics-help studio-metrics-help">
+                <summary>
+                  Useful memory, waste, and fragmentation explained
+                </summary>
+                <div id="studioMetricHelp" class="metric-explanations"></div>
+              </details>
+              <div class="address-overview">
+                <div class="address-labels">
+                  <span>ADDRESS SPACE</span><span id="studioStep">Step 1</span>
+                </div>
                 <div
-                    id="memoryMapLegend"
-                    class="memory-map-legend"
-                    style="display: none;"
+                  id="studioCapacity"
+                  class="studio-capacity"
+                  aria-label="Proportional memory overview"
                 ></div>
+                <div id="studioPointer" class="pointer-slot"></div>
+                <p class="map-scale-note">
+                  Segment widths show reserved size. Hatched space inside an
+                  allocated segment is internal waste.
+                </p>
+                <div class="address-labels">
+                  <span>0 MB</span><span id="studioEndAddress">0 MB</span>
+                </div>
+              </div>
+              <section
+                id="memoryInspector"
+                class="memory-inspector"
+                aria-label="Selected memory block details"
+              ></section>
+              <details id="memoryDetails" class="memory-details">
+                <summary>Detailed partitions &amp; addresses</summary>
+                <div class="map-column-labels">
+                  <span>Start</span><span>Partition / owner</span
+                  ><span>End</span>
+                </div>
+                <div id="memoryMap" class="memory-map">
+                  <div class="empty-state">
+                    <strong>No memory configured</strong>
+                    <span> Load sample data to begin the simulation. </span>
+                  </div>
+                </div>
 
+                <div
+                  id="memoryMapLegend"
+                  class="memory-map-legend"
+                  style="display: none"
+                ></div>
+              </details>
+              <section
+                class="request-inspector"
+                aria-labelledby="requestInspectorTitle"
+              >
+                <div class="inspector-heading">
+                  <div>
+                    <h3 id="requestInspectorTitle">Request preview</h3>
+                    <p>
+                      Compare the next placement across all four algorithms.
+                    </p>
+                  </div>
+                  <div class="preview-size">
+                    <label for="previewRequest">Request (MB)</label
+                    ><input
+                      id="previewRequest"
+                      type="number"
+                      min="1"
+                      step="1"
+                      value="212"
+                    />
+                  </div>
+                </div>
+                <p id="previewContext" class="preview-context"></p>
+                <p
+                  id="requestFeasibility"
+                  class="request-feasibility"
+                  aria-live="polite"
+                ></p>
+                <div id="requestChoices" class="request-choices"></div>
+              </section>
             </div>
 
-        </section>
-
-        <!-- PROCESS TABLE -->
-
-        <section class="panel">
-
-            <div class="panel-header">
-
+            <section class="panel steps-panel">
+              <div class="panel-header">
                 <div>
-                    <h2>Processes</h2>
-                    <p>
-                        Current state of simulated processes.
-                    </p>
+                  <h2>Allocation trace</h2>
+                  <p>Follow the search and placement decisions.</p>
                 </div>
+              </div>
 
-                <span
-                    id="processSummary"
-                    class="panel-meta"
-                >
-                    0 processes
-                </span>
+              <div class="decision-cost" id="decisionCost" role="status"></div>
+              <div id="allocationSteps" class="steps-container">
+                <div class="empty-state small">
+                  <span> Allocation decisions will appear here. </span>
+                </div>
+              </div>
+            </section>
+          </section>
 
+          <section class="panel scenario-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Workload scenarios</h2>
+                <p>
+                  Load a workload, advance its lifecycle, then compare placement
+                  strategies.
+                </p>
+              </div>
+            </div>
+            <div class="scenario-controls">
+              <div class="control-group">
+                <label for="scenarioSelect">Scenario</label
+                ><select id="scenarioSelect">
+                  <option value="normal">1 — Normal Workload</option>
+                  <option value="fragmentation">
+                    2 — Fragmentation Stress Test
+                  </option>
+                  <option value="large">3 — Large Process Workload</option>
+                  <option value="mixed">4 — Mixed Workload</option>
+                  <option value="comparison">5 — Algorithm Comparison</option>
+                </select>
+              </div>
+              <button id="loadScenarioButton" class="button button-secondary">
+                Load Scenario
+              </button>
+              <button
+                id="scenarioNextButton"
+                class="button button-secondary"
+                disabled
+              >
+                Next Action
+              </button>
+              <button
+                id="scenarioRunButton"
+                class="button button-primary"
+                disabled
+              >
+                Run Workload
+              </button>
+            </div>
+            <p id="scenarioDescription" class="panel-copy"></p>
+            <p id="scenarioProgress" class="panel-copy panel-meta"></p>
+          </section>
+          <section class="lower-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Allocation Failure Analysis</h2>
+                  <p>Diagnostic snapshot from the latest failed request.</p>
+                </div>
+              </div>
+              <div
+                id="failureAnalysis"
+                class="analysis-content"
+                aria-live="polite"
+              ></div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Memory Compaction</h2>
+                  <p>Before and after · free memory is conserved.</p>
+                </div>
+              </div>
+              <div id="compactionAnalysis" class="analysis-content"></div>
+            </div>
+          </section>
+        </section>
+        <section class="page" data-page="processes" id="processesPage" hidden>
+          <div class="section-toolbar">
+            <p>Every request, from creation to release.</p>
+            <a
+              href="#simulator"
+              data-navigate="simulator"
+              class="button button-primary"
+              ><svg class="icon" aria-hidden="true">
+                <use href="#icon-play"></use>
+              </svg>
+              Create a process</a
+            >
+          </div>
+          <!-- PROCESS TABLE -->
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Processes</h2>
+                <p>Current state of simulated processes.</p>
+              </div>
+
+              <span id="processSummary" class="panel-meta"> 0 processes </span>
             </div>
 
             <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>PID</th>
+                    <th>Process</th>
+                    <th>Requested</th>
+                    <th>Allocated</th>
+                    <th>Status</th>
+                    <th>Internal waste</th>
+                    <th>Attempts</th>
+                    <th>Failures</th>
+                    <th>Block / lifecycle steps</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
 
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>PID</th>
-                            <th>Process</th>
-                            <th>Requested</th>
-                            <th>Allocated</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="processTableBody">
-
-                        <tr>
-                            <td
-                                colspan="6"
-                                class="table-empty"
-                            >
-                                No processes created yet.
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
+                <tbody id="processTableBody">
+                  <tr>
+                    <td colspan="10" class="table-empty">
+                      No processes created yet.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
+          </section>
         </section>
-
-        <!-- ALGORITHM COMPARISON -->
-
-        <section class="panel comparison-panel">
-
+        <section class="page" data-page="comparison" id="comparisonPage" hidden>
+          <section class="workspace-intro comparison-intro">
+            <div class="intro-icon">
+              <svg class="icon" aria-hidden="true">
+                <use href="#icon-compare"></use>
+              </svg>
+            </div>
+            <div>
+              <h2>Four strategies. One fair comparison.</h2>
+              <p>
+                First Fit, Best Fit, Worst Fit, and Next Fit start with
+                identical memory and lifecycle actions.
+              </p>
+            </div>
+          </section>
+          <section
+            id="comparisonLayoutSection"
+            class="comparison-layout-section"
+            aria-labelledby="comparisonLayoutTitle"
+            hidden
+          >
+            <div class="comparison-layout-heading">
+              <h2 id="comparisonLayoutTitle">
+                Same workload. Four memory layouts.
+              </h2>
+              <p id="comparisonLayoutNote"></p>
+            </div>
+            <div id="comparisonLayouts" class="comparison-layout-grid"></div>
+            <p class="comparison-layout-legend">
+              Process colors stay consistent across algorithms. Striped regions
+              are free; hatching within a process shows internal waste. Maps are
+              comparison snapshots.
+            </p>
+          </section>
+          <div id="comparisonCharts" class="comparison-charts"></div>
+          <section class="panel comparison-panel">
             <div class="panel-header">
+              <div>
+                <h2>Algorithm Comparison</h2>
 
-                <div>
-                    <h2>Algorithm Comparison</h2>
+                <p>
+                  Run the current workload independently using all four
+                  allocation strategies.
+                </p>
+              </div>
 
-                    <p>
-                        Run the current workload independently
-                        using all three allocation strategies.
-                    </p>
-                </div>
-
-                <button
-                    id="compareButton"
-                    class="button button-primary"
-                >
-                    Run Comparison
-                </button>
-
+              <button id="compareButton" class="button button-primary">
+                Run Comparison
+              </button>
             </div>
 
             <div class="comparison-info">
+              <div class="comparison-note">
+                <strong>How it works</strong>
 
-                <div class="comparison-note">
-                    <strong>How it works</strong>
-
-                    <span>
-                        Each algorithm starts with the same original
-                        memory configuration and process workload.
-                    </span>
-                </div>
-
+                <span>
+                  Each algorithm starts with the same original memory
+                  configuration and process workload.
+                </span>
+              </div>
             </div>
 
             <div class="table-wrapper">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>First Fit</th>
+                    <th>Best Fit</th>
+                    <th>Worst Fit</th>
+                    <th>Next Fit</th>
+                  </tr>
+                </thead>
 
-                <table class="comparison-table">
-
-                    <thead>
-
-                        <tr>
-                            <th>Algorithm</th>
-                            <th>Allocated</th>
-                            <th>Failed</th>
-                            <th>Utilization</th>
-                            <th>Free Memory</th>
-                            <th>Largest Free Block</th>
-                            <th>Free Partitions</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="comparisonTableBody">
-
-                        <tr>
-
-                            <td
-                                colspan="7"
-                                class="table-empty"
-                            >
-                                Run a comparison to see results.
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-                <div
-                    id="comparisonSummary"
-                    class="comparison-summary"
-                >
-                </div>
-
+                <tbody id="comparisonTableBody">
+                  <tr>
+                    <td colspan="5" class="table-empty">
+                      Run a comparison to see results.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="comparisonSummary" class="comparison-summary"></div>
             </div>
-
+          </section>
         </section>
-        <!-- LOWER GRID -->
-
-        <section class="lower-grid">
-
-            <!-- ALLOCATION STEPS -->
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>Allocation Steps</h2>
-                        <p>
-                            See how the selected algorithm made
-                            its decision.
-                        </p>
-                    </div>
-
-                </div>
-
-                <div
-                    id="allocationSteps"
-                    class="steps-container"
-                >
-
-                    <div class="empty-state small">
-                        <span>
-                            Allocation decisions will appear here.
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- SIMULATION STATISTICS -->
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>Fragmentation</h2>
-                        <p>
-                            Memory distribution statistics.
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="fragmentation-list">
-
-                    <div class="fragmentation-item">
-
-                        <div>
-                            <span>
-                                Internal Fragmentation
-                            </span>
-
-                            <small>
-                                Unused space inside allocated partitions
-                            </small>
-                        </div>
-
-                        <strong id="internalFragmentation">
-                            0 MB
-                        </strong>
-
-                    </div>
-
-                    <div class="fragmentation-item">
-
-                        <div>
-                            <span>
-                                External Fragmentation
-                            </span>
-
-                            <small>
-                                Total free memory in separate holes
-                            </small>
-                        </div>
-
-                        <strong id="externalFragmentation">
-                            0 MB
-                        </strong>
-
-                    </div>
-
-                    <div class="fragmentation-item">
-
-                        <div>
-                            <span>
-                                Largest Free Block
-                            </span>
-
-                            <small>
-                                Largest currently available partition
-                            </small>
-                        </div>
-
-                        <strong id="largestFreeBlock">
-                            0 MB
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- ACTIVITY LOG -->
-
-        <section class="panel activity-panel">
-
+        <section class="page" data-page="analytics" id="analyticsPage" hidden>
+          <section class="panel fragmentation-panel">
             <div class="panel-header">
+              <div>
+                <h2>Fragmentation</h2>
+                <span
+                  id="fragmentationSeverity"
+                  class="status-badge status-waiting"
+                ></span>
+                <p>Memory distribution statistics.</p>
+              </div>
+            </div>
 
+            <div class="fragmentation-list">
+              <div class="fragmentation-item">
                 <div>
-                    <h2>Activity Log</h2>
-                    <p>
-                        Recent simulation events.
-                    </p>
+                  <span> Internal Fragmentation </span>
+
+                  <small> Unused space inside allocated partitions </small>
                 </div>
 
-            </div>
+                <strong id="internalFragmentation"> 0 MB </strong>
+              </div>
 
+              <div class="fragmentation-item">
+                <div>
+                  <span> External Fragmentation </span>
+
+                  <small>
+                    Free memory minus the largest free hole (variable mode)
+                  </small>
+                </div>
+
+                <strong id="externalFragmentation"> 0 MB </strong>
+              </div>
+
+              <div class="fragmentation-item">
+                <div>
+                  <span> Largest Free Block </span>
+
+                  <small> Largest currently available partition </small>
+                </div>
+
+                <strong id="largestFreeBlock"> 0 MB </strong>
+              </div>
+
+              <div class="fragmentation-item">
+                <div>
+                  <span>External Fragmentation Ratio</span
+                  ><small>External / free memory × 100</small>
+                </div>
+                <strong id="externalRatio">0%</strong>
+              </div>
+              <div class="fragmentation-item">
+                <div>
+                  <span>Internal Fragmentation Ratio</span
+                  ><small>Internal / reserved memory × 100</small>
+                </div>
+                <strong id="internalRatio">0%</strong>
+              </div>
+              <div class="fragmentation-item">
+                <div>
+                  <span>Total Wasted Memory</span
+                  ><small>Internal waste + external fragmentation</small>
+                </div>
+                <strong id="wastedMemory">0 MB</strong>
+              </div>
+              <div class="fragmentation-item">
+                <div>
+                  <span>Compactions</span
+                  ><small>Successful variable-memory compactions</small>
+                </div>
+                <strong id="compactionCount">0</strong>
+              </div>
+            </div>
+            <p id="fragmentationExplanation" class="panel-copy"></p>
             <div
-                id="activityLog"
-                class="activity-log"
-            >
-
-                <div class="empty-state small">
-                    <span>
-                        No simulation events yet.
-                    </span>
-                </div>
-
+              id="analyticsMetricHelp"
+              class="metric-explanations analytics-metric-help"
+            ></div>
+          </section>
+          <section class="panel analytics-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Real-time Analytics</h2>
+                <p>
+                  One sample per simulation event. All graphs reset with memory
+                  configuration.
+                </p>
+              </div>
+            </div>
+            <div class="analytics-grid">
+              <div class="chart-card">
+                <h3>Memory Utilization</h3>
+                <div id="utilizationChart"></div>
+              </div>
+              <div class="chart-card">
+                <h3>Allocated vs Free Memory</h3>
+                <div id="memoryChart"></div>
+              </div>
+              <div class="chart-card">
+                <h3>External Fragmentation</h3>
+                <div id="fragmentationChart"></div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <section class="page" data-page="activity" id="activityPage" hidden>
+          <section class="panel activity-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Activity Log</h2>
+                <p>Recent simulation events.</p>
+              </div>
             </div>
 
+            <div id="activityLog" class="activity-log">
+              <div class="empty-state small">
+                <span> No simulation events yet. </span>
+              </div>
+            </div>
+          </section>
         </section>
-
-    </main>
-
-    <!-- NOTIFICATION -->
-
-    <div
-        id="notification"
-        class="notification"
-        role="alert"
-        aria-live="polite"
-    >
+        <section class="page" data-page="guide" id="guidePage" hidden>
+          <section class="panel guide-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Small decisions. Different outcomes.</h2>
+                <p>The memory model behind your simulation.</p>
+              </div>
+            </div>
+            <div class="reference-grid">
+              <article>
+                <span class="reference-number">01</span>
+                <h3>Choose a strategy</h3>
+                <p>
+                  <strong>First Fit</strong> stops at the first free block that
+                  fits. <strong>Best Fit</strong> chooses the smallest suitable
+                  block. <strong>Worst Fit</strong> chooses the largest.
+                  <strong>Next Fit</strong> resumes from its saved search
+                  position and wraps around.
+                </p>
+              </article>
+              <article>
+                <span class="reference-number">02</span>
+                <h3>Know your partitions</h3>
+                <p>
+                  <strong>Variable partitions</strong> split blocks to match a
+                  request. <strong>Fixed partitions</strong> reserve an entire
+                  region, leaving unused space inside it.
+                </p>
+              </article>
+              <article>
+                <span class="reference-number">03</span>
+                <h3>Understand fragmentation</h3>
+                <p>
+                  External fragmentation = free memory − largest free block.
+                  Internal fragmentation = reserved memory − requested memory in
+                  allocated processes.
+                </p>
+              </article>
+              <article>
+                <span class="reference-number">04</span>
+                <h3>Make memory contiguous</h3>
+                <p>
+                  Compaction moves allocated processes together and combines
+                  free space. It preserves total free memory and is available in
+                  variable mode.
+                </p>
+              </article>
+              <article>
+                <span class="reference-number">05</span>
+                <h3>Take it step by step</h3>
+                <p>
+                  Enable step mode in the studio to inspect each free block.
+                  Previous reviews the explanation; completing an allocation
+                  commits it only once.
+                </p>
+              </article>
+              <article>
+                <span class="reference-number">06</span>
+                <h3>Replay a fair workload</h3>
+                <p>
+                  Comparisons use independent memory states and identical
+                  actions. Recommendations prioritize allocation success, then
+                  useful utilization, fragmentation, and search work.
+                </p>
+              </article>
+            </div>
+          </section>
+        </section>
+        <footer class="workspace-footer">
+          <span>Interactive Memory Allocation Simulator</span
+          ><span>Made by Umang | Sarthak | Aditya</span>
+        </footer>
+      </main>
     </div>
+    <div
+      id="notification"
+      class="notification"
+      role="status"
+      aria-live="polite"
+    ></div>
+    <dialog id="simulationDialog" aria-labelledby="dialogTitle">
+      <form method="dialog" id="dialogForm">
+        <h2 id="dialogTitle">Simulation action</h2>
+        <p id="dialogMessage"></p>
+        <div id="dialogInputGroup" class="form-field hidden">
+          <label for="dialogMemory">Additional memory (MB)</label
+          ><input id="dialogMemory" type="number" min="1" step="1" />
+        </div>
+        <div class="dialog-actions">
+          <button
+            id="dialogCancel"
+            type="button"
+            class="button button-secondary"
+          >
+            Cancel</button
+          ><button
+            id="dialogConfirm"
+            type="submit"
+            class="button button-primary"
+          >
+            Continue
+          </button>
+        </div>
+      </form>
+    </dialog>
 
-    <!-- JAVASCRIPT -->
+    <!-- Load core logic first. UI and features define helpers; app.js starts the app last. -->
+    <script src="js/core/algorithms.js?v=25"></script>
+    <script src="js/core/memory-engine.js?v=25"></script>
 
-    <script src="algorithms.js"></script>
-    <script src="visualization.js"></script>
-    <script src="script.js"></script>
+    <!-- Presentation and interactive feature helpers (preserve this dependency order). -->
+    <script src="js/interface/visualization.js?v=25"></script>
+    <script src="js/interface/dialogs.js?v=25"></script>
+    <script src="js/interface/scenarios.js?v=25"></script>
+    <script src="js/interface/analytics.js?v=25"></script>
+    <script src="js/interface/studio-tools.js?v=25"></script>
+    <script src="js/interface/workspace.js?v=25"></script>
+    <script src="js/interface/block-inspector.js?v=25"></script>
+    <script src="js/interface/lab-features.js?v=25"></script>
 
-</body>
+    <script src="js/interface/overview-demo.js?v=25"></script>
 
+    <script src="js/interface/learning-views.js?v=25"></script>
+
+    <!-- Application controller and startup. -->
+    <script src="js/app.js?v=25"></script>
+  </body>
 </html>

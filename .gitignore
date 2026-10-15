@@ -1,20 +1,8 @@
-# OS files
-.DS_Store
-Thumbs.db
-
-# VS Code
 .vscode/
 
-# Logs
 *.log
 
-# Temporary files
 *.tmp
 *.temp
 
-# Node
-node_modules/
-
-# Build output
-dist/
-build/
+/docs/
